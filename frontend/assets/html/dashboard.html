@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #dbeafe;
+            --bg: #f3f4f6;
+            --text: #111827;
+            --card-bg: #ffffff;
+            --danger: #dc2626;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .navbar-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+        }
+
+        .role-badge {
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .logout-btn {
+            border: none;
+            background: var(--danger);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .logout-btn:hover {
+            opacity: 0.9;
+        }
+
+        .container {
+            padding: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .welcome {
+            margin-bottom: 20px;
+        }
+
+        .welcome h1 {
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+        }
+
+        .welcome p {
+            font-size: 0.95rem;
+            color: #4b5563;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 150px;
+        }
+
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .card-btn {
+            border: none;
+            background: var(--primary);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .card-btn:hover {
+            opacity: 0.9;
+        }
+
+        .info-box {
+            margin-top: 20px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background: #e5e7eb;
+            font-size: 0.85rem;
+            color: #374151;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            background: #111827;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 10px 16px;
+            }
+            .container {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="navbar-title">Üniversite Sınav Sistemi – Dashboard</div>
+        <div class="navbar-right">
+            <span id="navbar-user"></span>
+            <span id="navbar-role" class="role-badge"></span>
+            <button class="logout-btn" id="logoutBtn">Çıkış Yap</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <section class="welcome">
+            <h1 id="welcome-title">Hoş geldin</h1>
+            <p id="welcome-text">
+                Buradan sınavlar, dersler ve sınıf doluluk durumları ile ilgili özet bilgileri görebilirsin.
+            </p>
+        </section>
+
+        <section class="grid">
+            <article class="card">
+                <div>
+                    <div class="card-title">Sınav Takvimi</div>
+                    <div class="card-subtitle">Yaklaşan sınav tarihlerini görüntüle.</div>
+                </div>
+                <div class="card-footer">
+                    <button class="card-btn" onclick="showToast('Sınav takvimi özelliği henüz eklenmedi.')">
+                        Görüntüle
+                    </button>
+                </div>
+            </article>
+
+            <article class="card">
+                <div>
+                    <div class="card-title">Sınıf Doluluk Durumu</div>
+                    <div class="card-subtitle">Sınav anında sınıfların doluluk oranlarını takip et.</div>
+                </div>
+                <div class="card-footer">
+                    <button class="card-btn" onclick="showToast('Sınıf doluluk ekranı daha sonra eklenecek.')">
+                        Görüntüle
+                    </button>
+                </div>
+            </article>
+
+            <article class="card">
+                <div>
+                    <div class="card-title">Ders ve Bölüm Yönetimi</div>
+                    <div class="card-subtitle">Bölümlere göre ders ve sınav atamalarını yönet.</div>
+                </div>
+                <div class="card-footer">
+                    <button class="card-btn" onclick="showToast('Bu bölüm için backend entegrasyonu bekleniyor.')">
+                        Yönet
+                    </button>
+                </div>
+            </article>
+        </section>
+
+        <div class="info-box" id="role-info">
+            Rolünüze göre bu panelde gösterilecek yetkiler ileride özelleştirilecektir.
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Kullanıcı rolünü Türkçeye çevirme
+        function translateRole(role) {
+            if (!role) return "";
+            switch (role) {
+                case "admin":
+                    return "Sistem Yöneticisi";
+                case "dean":
+                    return "Dekanlık Yetkilisi";
+                case "department_rep":
+                    return "Bölüm Yetkilisi";
+                default:
+                    return role;
+            }
+        }
+
+        // Basit toast mesajı
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.classList.add("show");
+
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 2500);
+        }
+
+        // Sayfa yüklendiğinde kullanıcıyı kontrol et
+        window.addEventListener("DOMContentLoaded", function () {
+            const rawUser = localStorage.getItem("user");
+
+            if (!rawUser) {
+                // Kullanıcı yoksa login sayfasına at
+                window.location.href = "login.html";
+                return;
+            }
+
+            let user;
+            try {
+                user = JSON.parse(rawUser);
+            } catch (e) {
+                console.error("Kullanıcı verisi çözümlenemedi:", e);
+                localStorage.removeItem("user");
+                window.location.href = "login.html";
+                return;
+            }
+
+            const fullName = user.full_name || user.fullname || user.name || "Kullanıcı";
+            const role = user.role || "";
+
+            document.getElementById("navbar-user").textContent = fullName;
+            document.getElementById("navbar-role").textContent = translateRole(role);
+            document.getElementById("welcome-title").textContent = `Hoş geldin, ${fullName}`;
+            document.getElementById("welcome-text").textContent =
+                `Bu panelde "${translateRole(role)}" rolü ile sisteme giriş yaptın. Aşağıdaki kartlar üzerinden özellikler zamanla aktif edilecektir.`;
+
+            const roleInfo = document.getElementById("role-info");
+            if (role === "admin") {
+                roleInfo.textContent = "Admin olarak sistemde kullanıcı, bölüm ve sınav yönetimi yetkilerine sahip olacaksın.";
+            } else if (role === "dean") {
+                roleInfo.textContent = "Dekanlık yetkilisi olarak bölümler arası sınav planlarını ve kontenjanları görebileceksin.";
+            } else if (role === "department_rep") {
+                roleInfo.textContent = "Bölüm yetkilisi olarak kendi bölümün ders ve sınav atamalarını yönetebileceksin.";
+            }
+        });
+
+        // Çıkış butonu
+        document.getElementById("logoutBtn").addEventListener("click", function () {
+            localStorage.removeItem("user");
+            window.location.href = "login.html";
+        });
+    </script>
+</body>
+</html>

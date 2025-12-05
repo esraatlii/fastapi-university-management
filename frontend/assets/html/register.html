@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ders Programı Sistemi - Kayıt</title>
+    <link rel="stylesheet" href="../css/register.css">
+</head>
+<body>
+    <div class="register-container">
+        <h2>Kayıt Formu</h2>
+
+        <form id="registerForm">
+            <input type="text" id="full_name" placeholder="Enter Your Full Name" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <input type="text" id="role" placeholder="Role" required>
+            <input type="text" id="department_id" placeholder="Departmen ID">
+            <button type="submit">Register</button>
+
+            <p id="error" class="error"></p>
+        </form>
+    </div>
+
+    <script src="../js/register.js"></script>
+
+</body>
+</html>
